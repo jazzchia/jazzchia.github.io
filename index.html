@@ -271,10 +271,82 @@
   }
   .back-link:hover{color:var(--current); border-color:var(--current);}
 
+  body{padding-bottom:64px;} /* room for the floating selection tray */
+
+  /* ---------- Selectable skills (tags + core-skill cards) ---------- */
+  .tag.selectable, .ccs-card.selectable{cursor:pointer; user-select:none; position:relative;}
+  .tag.selectable{transition:background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;}
+  .tag .tag-check{display:none; margin-right:5px;}
+  .tag.selected{
+    background:var(--current) !important; border-color:var(--current) !important; color:#fff !important;
+  }
+  .tag.selected .lvl-badge{background:rgba(255,255,255,0.25) !important; color:#fff;}
+  .tag.selected .tag-check{display:inline;}
+  .tag.selectable:hover{box-shadow:0 0 0 2px rgba(20,30,40,0.08) inset;}
+  .tag.selectable:focus-visible, .ccs-card.selectable:focus-visible{
+    outline:2px solid var(--current); outline-offset:2px;
+  }
+
+  .ccs-card.selectable{transition:background 0.15s ease, border-color 0.15s ease;}
+  .ccs-card.selectable .tag-check{
+    display:none; position:absolute; top:8px; right:9px; font-size:12px; color:#fff;
+    background:var(--current); width:16px; height:16px; border-radius:50%;
+    align-items:center; justify-content:center;
+  }
+  .ccs-card.selected{background:rgba(193,122,31,0.08); border-color:var(--current);}
+  .ccs-card.selected .tag-check{display:flex;}
+
+  .select-hint{font-size:12.5px; color:var(--text-faint); margin:-8px 0 14px;}
+
   footer{
     border-top:1px solid var(--border); padding:28px 0 40px; margin-top:40px;
     color:var(--text-faint); font-size:12px; font-family:'IBM Plex Mono', monospace;
   }
+
+  /* ---------- Floating selection tray ---------- */
+  .selection-tray{
+    position:fixed; left:0; right:0; bottom:0; z-index:40;
+    background:#ffffff; border-top:1px solid var(--border);
+    box-shadow:0 -4px 16px rgba(20,30,40,0.08);
+    transform:translateY(100%); transition:transform 0.25s ease;
+  }
+  .selection-tray.visible{transform:translateY(0);}
+  .tray-bar{
+    display:flex; align-items:center; justify-content:space-between; gap:16px;
+    max-width:1080px; margin:0 auto; padding:12px 24px;
+  }
+  .tray-expand{
+    display:flex; align-items:center; gap:10px; background:none; border:none; cursor:pointer;
+    font-family:'IBM Plex Mono', monospace; font-size:13px; color:var(--text); padding:6px 0;
+  }
+  .tray-chevron{font-size:10px; color:var(--text-faint); transition:transform 0.2s ease;}
+  .selection-tray.expanded .tray-chevron{transform:rotate(180deg);}
+  .tray-actions{display:flex; gap:10px; flex:none;}
+  .tray-btn{
+    font-family:'IBM Plex Sans', sans-serif; font-size:13.5px; font-weight:500;
+    border-radius:8px; padding:9px 16px; cursor:pointer; border:1px solid var(--border);
+  }
+  .tray-btn-ghost{background:#fff; color:var(--text-dim);}
+  .tray-btn-ghost:hover{background:var(--surface-2);}
+  .tray-btn-primary{background:var(--current); color:#fff; border-color:var(--current);}
+  .tray-btn-primary:hover{opacity:0.92;}
+  .tray-btn-primary.copied{background:var(--moderate); border-color:var(--moderate);}
+
+  .tray-chips{
+    max-height:0; overflow-y:auto; transition:max-height 0.25s ease;
+    max-width:1080px; margin:0 auto; padding:0 24px; display:flex; flex-wrap:wrap; gap:8px;
+  }
+  .selection-tray.expanded .tray-chips{max-height:180px; padding:14px 24px 4px;}
+  .tray-chip{
+    display:inline-flex; align-items:center; gap:6px; font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px; background:var(--surface-2); border:1px solid var(--border); border-radius:20px;
+    padding:5px 6px 5px 12px; color:var(--text);
+  }
+  .tray-chip-remove{
+    background:none; border:none; cursor:pointer; color:var(--text-faint); font-size:15px;
+    line-height:1; padding:2px 4px; border-radius:50%;
+  }
+  .tray-chip-remove:hover{color:var(--challenging); background:rgba(193,68,47,0.1);}
 
   @media (prefers-reduced-motion: reduce){
     html{scroll-behavior:auto;}
@@ -284,7 +356,7 @@
   /* ---------- Mobile readability pass ---------- */
   @media (max-width:700px){
     .wrap{padding:0 18px;}
-    body{font-size:16px;}
+    body{font-size:16px; padding-bottom:110px;}
     .hero{padding:36px 0 20px;}
     .hero p.lead{font-size:16px;}
     .eyebrow{font-size:13px;}
@@ -327,6 +399,12 @@
 
     .back-link{font-size:13.5px; padding:6px 0;}
     footer{font-size:12.5px;}
+
+    .tray-bar{padding:10px 16px;}
+    .tray-chips{padding:0 16px;}
+    .selection-tray.expanded .tray-chips{padding:12px 16px 4px;}
+    .tray-btn{padding:9px 13px; font-size:13px;}
+    .tray-expand{font-size:12.5px;}
   }
 </style>
 </head>
@@ -485,9 +563,11 @@
       <div class="subhead">Technical skills required</div>
       <p class="skills-note">Green = you likely already have this from your current role. Amber = a gap worth closing. "Lvl" is the SkillsFramework proficiency level required (1 = basic, up to 6 = expert).</p>
       <div class="tag-cloud" data-skills="devops"></div>
+      <p class="select-hint">Click any tag or card to add it to your selection tray for copying.</p>
 
       <div class="subhead">Critical core skills (top 5)</div>
       <div class="ccs-grid" data-ccs="devops"></div>
+      <p class="select-hint">Click any tag or card to add it to your selection tray for copying.</p>
 
       <div class="subhead">Why this move makes sense</div>
       <div class="mobility-box">
@@ -530,9 +610,11 @@
       <div class="subhead">Technical skills required</div>
       <p class="skills-note">Green = you likely already have this from your current role. Amber = a gap worth closing. "Lvl" is the SkillsFramework proficiency level required (1 = basic, up to 6 = expert).</p>
       <div class="tag-cloud" data-skills="sysops"></div>
+      <p class="select-hint">Click any tag or card to add it to your selection tray for copying.</p>
 
       <div class="subhead">Critical core skills (top 5)</div>
       <div class="ccs-grid" data-ccs="sysops"></div>
+      <p class="select-hint">Click any tag or card to add it to your selection tray for copying.</p>
 
       <div class="subhead">Why this move makes sense</div>
       <div class="mobility-box">
@@ -575,9 +657,11 @@
       <div class="subhead">Technical skills required</div>
       <p class="skills-note">Green = you likely already have this from your current role. Amber = a gap worth closing. "Lvl" is the SkillsFramework proficiency level required (1 = basic, up to 6 = expert).</p>
       <div class="tag-cloud" data-skills="security"></div>
+      <p class="select-hint">Click any tag or card to add it to your selection tray for copying.</p>
 
       <div class="subhead">Critical core skills (top 5)</div>
       <div class="ccs-grid" data-ccs="security"></div>
+      <p class="select-hint">Click any tag or card to add it to your selection tray for copying.</p>
 
       <div class="subhead">Why this move makes sense</div>
       <div class="mobility-box">
@@ -602,6 +686,21 @@
     <div class="wrap">Built from Singapore's Skills Framework for ICT (SkillsFuture SG / IMDA) — Infrastructure &amp; Operations and Support tracks.</div>
   </footer>
 </main>
+
+<!-- Floating selection tray: pick skills, copy for pasting into slides/docs -->
+<div id="selection-tray" class="selection-tray">
+  <div id="tray-chips" class="tray-chips"></div>
+  <div class="tray-bar">
+    <button id="tray-expand" class="tray-expand" aria-label="Show or hide selected skills">
+      <span id="tray-count">0 skills selected</span>
+      <span class="tray-chevron">▲</span>
+    </button>
+    <div class="tray-actions">
+      <button id="tray-clear" class="tray-btn tray-btn-ghost">Clear</button>
+      <button id="tray-copy" class="tray-btn tray-btn-primary">Copy list</button>
+    </div>
+  </div>
+</div>
 
 <script>
 const DATA = {
@@ -752,6 +851,8 @@ function buildCWF(role){
   });
 }
 
+const ROLE_LABELS = { devops: "DevOps Engineer", sysops: "SysOps Engineer", security: "Security Engineer" };
+
 function buildSkills(role){
   const el = document.querySelector('.tag-cloud[data-skills="'+role+'"]');
   const match = new Set(DATA[role].match);
@@ -760,14 +861,21 @@ function buildSkills(role){
     let cls = '';
     if(match.has(name)) cls = 'match';
     else if(gap.has(name)) cls = 'gap';
-    return `<span class="tag ${cls}">${name}<span class="lvl-badge">Lvl ${level}</span></span>`;
+    return `<span class="tag selectable ${cls}" tabindex="0" role="checkbox" aria-checked="false"
+              data-role="${role}" data-type="skill" data-name="${name}" data-level="Level ${level}">
+              <span class="tag-check">✓</span>${name}<span class="lvl-badge">Lvl ${level}</span>
+            </span>`;
   }).join('');
 }
 
 function buildCCS(role){
   const el = document.querySelector('.ccs-grid[data-ccs="'+role+'"]');
   el.innerHTML = DATA[role].ccs.map(([name, lvl]) => `
-    <div class="ccs-card"><div class="lvl">${lvl}</div><div class="name">${name}</div></div>
+    <div class="ccs-card selectable" tabindex="0" role="checkbox" aria-checked="false"
+         data-role="${role}" data-type="core" data-name="${name}" data-level="${lvl}">
+      <span class="tag-check">✓</span>
+      <div class="lvl">${lvl}</div><div class="name">${name}</div>
+    </div>
   `).join('');
 }
 
@@ -784,6 +892,116 @@ function buildMatchGap(role){
   buildCCS(role);
   buildMatchGap(role);
 });
+
+// ---------- Selection tray: pick skills, copy for pasting elsewhere ----------
+const selection = new Map(); // key: role|type|name -> {role,type,name,level}
+
+function selectionKey(el){
+  return el.dataset.role + '|' + el.dataset.type + '|' + el.dataset.name;
+}
+
+function toggleSelect(el){
+  const key = selectionKey(el);
+  if(selection.has(key)){
+    selection.delete(key);
+    el.classList.remove('selected');
+    el.setAttribute('aria-checked','false');
+  } else {
+    selection.set(key, {
+      role: el.dataset.role,
+      type: el.dataset.type,
+      name: el.dataset.name,
+      level: el.dataset.level
+    });
+    el.classList.add('selected');
+    el.setAttribute('aria-checked','true');
+  }
+  renderTray();
+}
+
+document.querySelectorAll('.tag.selectable, .ccs-card.selectable').forEach(el => {
+  el.addEventListener('click', () => toggleSelect(el));
+  el.addEventListener('keypress', e => { if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); toggleSelect(el); } });
+});
+
+function buildClipboardText(){
+  const byRole = {};
+  selection.forEach(item => {
+    (byRole[item.role] = byRole[item.role] || []).push(item);
+  });
+  const blocks = Object.keys(byRole).map(role => {
+    const label = ROLE_LABELS[role] || role;
+    const lines = byRole[role].map(item => {
+      const kind = item.type === 'core' ? 'Core skill' : 'Technical skill';
+      return `• ${item.name} (${kind}, ${item.level})`;
+    });
+    return `${label} — Selected Skills\n${lines.join('\n')}`;
+  });
+  return blocks.join('\n\n');
+}
+
+function renderTray(){
+  const tray = document.getElementById('selection-tray');
+  const count = selection.size;
+  const countEl = document.getElementById('tray-count');
+  const chipsEl = document.getElementById('tray-chips');
+
+  tray.classList.toggle('visible', count > 0);
+  countEl.textContent = count + (count === 1 ? ' skill selected' : ' skills selected');
+
+  chipsEl.innerHTML = Array.from(selection.entries()).map(([key, item]) => `
+    <span class="tray-chip" data-key="${key}">
+      ${item.name}
+      <button class="tray-chip-remove" aria-label="Remove ${item.name}" data-key="${key}">×</button>
+    </span>
+  `).join('');
+
+  chipsEl.querySelectorAll('.tray-chip-remove').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const key = btn.getAttribute('data-key');
+      selection.delete(key);
+      document.querySelectorAll('.selectable.selected').forEach(el => {
+        if(selectionKey(el) === key){ el.classList.remove('selected'); el.setAttribute('aria-checked','false'); }
+      });
+      renderTray();
+    });
+  });
+}
+
+document.getElementById('tray-clear').addEventListener('click', () => {
+  selection.clear();
+  document.querySelectorAll('.selectable.selected').forEach(el => {
+    el.classList.remove('selected');
+    el.setAttribute('aria-checked','false');
+  });
+  renderTray();
+});
+
+document.getElementById('tray-expand').addEventListener('click', () => {
+  document.getElementById('selection-tray').classList.toggle('expanded');
+});
+
+document.getElementById('tray-copy').addEventListener('click', async () => {
+  const text = buildClipboardText();
+  const btn = document.getElementById('tray-copy');
+  const restoreLabel = btn.textContent;
+  try{
+    await navigator.clipboard.writeText(text);
+  } catch(err){
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+  }
+  btn.textContent = 'Copied ✓';
+  btn.classList.add('copied');
+  setTimeout(() => { btn.textContent = restoreLabel; btn.classList.remove('copied'); }, 1600);
+});
+
 
 // node click -> highlight path + scroll (desktop SVG nodes)
 document.querySelectorAll('.node-group[data-target]').forEach(node => {
