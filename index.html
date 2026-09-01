@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Career Pathway · Infrastructure Support Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#ffffff;
+    --surface:#ffffff;
+    --surface-2:#f4f5f6;
+    --border:#dde2e7;
+    --text:#1a222c;
+    --text-dim:#586374;
+    --text-faint:#8b96a3;
+    --current:#c17a1f;
+    --moderate:#2f8f5e;
+    --challenging:#c1442f;
+    --match:#2f8f5e;
+    --gap:#b8791a;
+    --radius:10px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:'IBM Plex Sans', sans-serif;
+    line-height:1.55;
+    background-image:
+      linear-gradient(rgba(20,30,40,0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(20,30,40,0.035) 1px, transparent 1px);
+    background-size: 42px 42px;
+  }
+  h1,h2,h3,h4{font-family:'Space Grotesk', sans-serif; margin:0 0 0.4em; letter-spacing:-0.01em;}
+  .mono{font-family:'IBM Plex Mono', monospace;}
+  .wrap{max-width:1080px; margin:0 auto; padding:0 24px;}
+  a{color:inherit;}
+
+  /* ---------- Header ---------- */
+  header.top{
+    border-bottom:1px solid var(--border);
+    background:rgba(255,255,255,0.92);
+    position:sticky; top:0; z-index:20;
+    backdrop-filter: blur(6px);
+  }
+  header.top .row{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 24px; gap:16px; flex-wrap:wrap;
+  }
+  .brand{display:flex; align-items:center; gap:10px;}
+  .brand-mark{
+    width:30px; height:30px; border-radius:6px;
+    background:linear-gradient(135deg, var(--current), #c47c1f);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'IBM Plex Mono', monospace; font-weight:600; font-size:13px; color:#1a1206;
+  }
+  .brand-text{font-size:14px; color:var(--text-dim);}
+  .brand-text strong{color:var(--text); font-family:'Space Grotesk', sans-serif; font-size:15px;}
+  .track-tag{
+    font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:0.06em;
+    text-transform:uppercase; color:var(--text-dim);
+    border:1px solid var(--border); border-radius:20px; padding:5px 12px;
+  }
+
+  /* ---------- Hero ---------- */
+  .hero{padding:56px 0 24px;}
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace; font-size:12px; letter-spacing:0.08em;
+    text-transform:uppercase; color:var(--current); margin-bottom:14px;
+  }
+  .hero h1{font-size:clamp(28px, 4vw, 42px); max-width:760px;}
+  .hero p.lead{color:var(--text-dim); max-width:620px; font-size:16px;}
+  .horizon{
+    display:inline-flex; align-items:center; gap:8px; margin-top:18px;
+    font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--text-dim);
+    border:1px dashed var(--border); border-radius:20px; padding:6px 14px;
+  }
+  .horizon b{color:var(--current); font-weight:600;}
+
+  /* ---------- Pathway map ---------- */
+  .map-section{padding:24px 0 12px;}
+  .map-card{
+    border:1px solid var(--border); border-radius:16px; background:var(--surface-2); box-shadow:0 1px 3px rgba(20,30,40,0.05);
+    padding:32px 24px 24px; overflow:hidden;
+  }
+  .pathway{position:relative;}
+  svg.pathway-svg{width:100%; height:auto; display:block;}
+  .path-line{
+    fill:none; stroke:var(--border); stroke-width:2;
+    transition:stroke 0.25s ease, stroke-width 0.25s ease;
+  }
+  .path-line.dash{stroke-dasharray:6 6;}
+  .node-group{cursor:pointer;}
+  .node-circle{
+    fill:var(--surface-2); stroke:var(--border); stroke-width:1.5;
+    transition:stroke 0.2s ease, fill 0.2s ease;
+  }
+  .node-group.current .node-circle{fill:rgba(193,122,31,0.1); stroke:var(--current);}
+  .node-group[data-difficulty="moderate"] .node-circle{stroke:var(--moderate);}
+  .node-group[data-difficulty="challenging"] .node-circle{stroke:var(--challenging);}
+  .node-group:hover .node-circle, .node-group.active .node-circle{
+    fill:rgba(20,30,40,0.045);
+  }
+  .node-label{
+    font-family:'Space Grotesk', sans-serif; font-weight:600; fill:var(--text); font-size:14px;
+  }
+  .node-sub{
+    font-family:'IBM Plex Mono', monospace; fill:var(--text-dim); font-size:10.5px; text-transform:uppercase; letter-spacing:0.05em;
+  }
+  .node-badge-bg{fill:var(--surface); stroke:var(--border); stroke-width:1;}
+  .node-badge-text{font-family:'IBM Plex Mono', monospace; font-size:9.5px; text-transform:uppercase; letter-spacing:0.04em;}
+  .badge-moderate .node-badge-bg{stroke:var(--moderate);}
+  .badge-moderate .node-badge-text{fill:var(--moderate);}
+  .badge-challenging .node-badge-bg{stroke:var(--challenging);}
+  .badge-challenging .node-badge-text{fill:var(--challenging);}
+
+  .legend{
+    display:flex; gap:22px; flex-wrap:wrap; margin-top:20px;
+    font-family:'IBM Plex Mono', monospace; font-size:11.5px; color:var(--text-dim);
+  }
+  .legend span{display:inline-flex; align-items:center; gap:7px;}
+  .dot{width:9px; height:9px; border-radius:50%; display:inline-block;}
+  .dot.current{background:var(--current);}
+  .dot.moderate{background:var(--moderate);}
+  .dot.challenging{background:var(--challenging);}
+
+  /* ---------- Trends + future view ---------- */
+  .grid-2{display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:20px;}
+  @media (max-width:760px){.grid-2{grid-template-columns:1fr;}}
+  .panel{
+    border:1px solid var(--border); border-radius:14px; background:var(--surface-2);
+    padding:22px 22px;
+  }
+  .panel h3{font-size:15px; text-transform:uppercase; letter-spacing:0.04em; color:var(--text-dim); font-family:'IBM Plex Mono', monospace; font-weight:500;}
+  .trend-chips{display:flex; gap:10px; flex-wrap:wrap; margin-top:12px;}
+  .trend-chip{
+    border:1px solid var(--border); border-radius:8px; padding:8px 12px;
+    font-size:12.5px; color:var(--text); background:#ffffff;
+  }
+  ul.clean{margin:12px 0 0; padding-left:18px; color:var(--text-dim); font-size:14.5px;}
+  ul.clean li{margin-bottom:8px;}
+  ul.clean li::marker{color:var(--current);}
+
+  /* ---------- Role detail sections ---------- */
+  .role-section{
+    padding:64px 0 40px; border-top:1px solid var(--border); scroll-margin-top:80px;
+  }
+  .role-head{display:flex; align-items:flex-start; justify-content:space-between; gap:20px; flex-wrap:wrap;}
+  .role-eyebrow{font-family:'IBM Plex Mono', monospace; font-size:12px; letter-spacing:0.06em; text-transform:uppercase; color:var(--text-dim);}
+  .role-title{font-size:clamp(24px,3.2vw,32px); margin-top:6px;}
+  .difficulty-pill{
+    display:inline-flex; align-items:center; gap:8px;
+    border-radius:20px; padding:7px 14px; font-family:'IBM Plex Mono', monospace; font-size:12px;
+    border:1px solid var(--border); white-space:nowrap; height:fit-content;
+  }
+  .difficulty-pill.moderate{border-color:var(--moderate); color:var(--moderate);}
+  .difficulty-pill.challenging{border-color:var(--challenging); color:var(--challenging);}
+  .gauge{width:14px; height:14px; border-radius:50%; border:2px solid currentColor; position:relative; flex:none;}
+  .gauge::after{content:""; position:absolute; inset:3px; border-radius:50%; background:currentColor; opacity:0.35;}
+
+  .role-desc{color:var(--text-dim); font-size:15px; max-width:720px; margin-top:18px;}
+  .role-desc p{margin:0 0 12px;}
+
+  .subhead{
+    font-family:'IBM Plex Mono', monospace; font-size:12px; letter-spacing:0.06em; text-transform:uppercase;
+    color:var(--text-faint); margin:36px 0 14px; display:flex; align-items:center; gap:10px;
+  }
+  .subhead::after{content:""; flex:1; height:1px; background:var(--border);}
+
+  /* work functions accordion */
+  .cwf-item{border:1px solid var(--border); border-radius:10px; margin-bottom:10px; background:var(--surface-2); overflow:hidden;}
+  .cwf-toggle{
+    width:100%; text-align:left; background:none; border:none; color:var(--text);
+    font-family:'IBM Plex Sans', sans-serif; font-size:14.5px; font-weight:500;
+    padding:14px 16px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; gap:10px;
+  }
+  .cwf-toggle .chev{color:var(--text-faint); transition:transform 0.2s ease; flex:none;}
+  .cwf-item.open .cwf-toggle .chev{transform:rotate(45deg); color:var(--current);}
+  .cwf-body{
+    max-height:0; overflow:hidden; transition:max-height 0.25s ease;
+    border-top:1px solid transparent;
+  }
+  .cwf-item.open .cwf-body{border-top:1px solid var(--border);}
+  .cwf-body ul{margin:0; padding:14px 16px 16px 32px; color:var(--text-dim); font-size:13.8px;}
+  .cwf-body li{margin-bottom:7px;}
+  .perf-note{
+    margin:0 16px 16px; font-size:12.5px; color:var(--current); font-family:'IBM Plex Mono', monospace;
+    padding-top:10px; border-top:1px dashed var(--border);
+  }
+
+  /* skills */
+  .skills-note{font-size:13px; color:var(--text-dim); margin-bottom:14px;}
+  .tag-cloud{display:flex; flex-wrap:wrap; gap:8px;}
+  .tag{
+    font-family:'IBM Plex Mono', monospace; font-size:12px; padding:6px 11px; border-radius:7px;
+    border:1px solid var(--border); color:var(--text-dim); background:var(--surface-2);
+  }
+  .tag.match{color:var(--match); border-color:rgba(47,143,94,0.4); background:rgba(47,143,94,0.08);}
+  .tag.gap{color:var(--gap); border-color:rgba(184,121,26,0.4); background:rgba(184,121,26,0.08);}
+  .tag .lvl-badge{
+    display:inline-block; margin-left:6px; padding:1px 5px; border-radius:4px;
+    background:rgba(20,30,40,0.06); font-size:10.5px;
+  }
+  .tag.match .lvl-badge{background:rgba(47,143,94,0.15);}
+  .tag.gap .lvl-badge{background:rgba(184,121,26,0.15);}
+  .tag em{font-style:normal; opacity:0.65; margin-left:5px;}
+
+  .ccs-grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(150px,1fr)); gap:10px;}
+  .ccs-card{border:1px solid var(--border); border-radius:9px; padding:12px 14px; background:var(--surface-2);}
+  .ccs-card .lvl{font-family:'IBM Plex Mono', monospace; font-size:10.5px; text-transform:uppercase; letter-spacing:0.04em; color:var(--current);}
+  .ccs-card .name{font-size:13.5px; margin-top:4px;}
+
+  /* mobility rationale */
+  .mobility-box{
+    border:1px solid var(--border); border-radius:12px; padding:20px; background:var(--surface-2); margin-top:16px;
+  }
+  .mobility-box p{color:var(--text-dim); font-size:14.5px; margin:0;}
+  .match-gap-grid{display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:18px;}
+  @media (max-width:600px){.match-gap-grid{grid-template-columns:1fr;}}
+  .mg-label{font-family:'IBM Plex Mono', monospace; font-size:11px; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:8px;}
+  .mg-label.match-l{color:var(--match);}
+  .mg-label.gap-l{color:var(--gap);}
+
+  .back-link{
+    display:inline-flex; align-items:center; gap:6px; margin-top:40px;
+    font-family:'IBM Plex Mono', monospace; font-size:12.5px; color:var(--text-dim);
+    text-decoration:none; border-bottom:1px solid var(--border); padding-bottom:2px;
+  }
+  .back-link:hover{color:var(--current); border-color:var(--current);}
+
+  footer{
+    border-top:1px solid var(--border); padding:28px 0 40px; margin-top:40px;
+    color:var(--text-faint); font-size:12px; font-family:'IBM Plex Mono', monospace;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *{transition:none !important;}
+  }
+</style>
+</head>
+<body>
+
+<header class="top" id="top">
+  <div class="row">
+    <div class="brand">
+      <div class="brand-mark">SF</div>
+      <div class="brand-text"><strong>Career Pathway</strong><br>Skills Framework for ICT</div>
+    </div>
+    <div class="track-tag">Operations &amp; Support Track</div>
+  </div>
+</header>
+
+<main>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap">
+      <div class="eyebrow">You are here</div>
+      <h1>Infrastructure Support Engineer</h1>
+      <p class="lead">This role is changing as AI, cloud and DevOps take over more of the day-to-day work. Explore three roles you could realistically move into next, and see exactly which skills carry over — and which ones you'd need to build.</p>
+      <div class="horizon">⏳ Outlook: <b>3–5 years</b> · standalone role need is decreasing, tasks folding into DevOps functions</div>
+    </div>
+  </section>
+
+  <!-- PATHWAY MAP -->
+  <section class="map-section">
+    <div class="wrap">
+      <div class="map-card">
+        <div class="pathway">
+          <svg class="pathway-svg" viewBox="0 0 900 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Career pathway diagram from Infrastructure Support Engineer to DevOps Engineer, SysOps Engineer, and Security Engineer">
+            <!-- connecting lines -->
+            <path class="path-line dash" id="line-devops" d="M170,160 C300,160 300,70 460,70"></path>
+            <path class="path-line dash" id="line-sysops" d="M170,160 C300,160 300,160 460,160"></path>
+            <path class="path-line dash" id="line-security" d="M170,160 C300,160 300,250 460,250"></path>
+
+            <!-- current role node -->
+            <g class="node-group current" tabindex="0">
+              <circle class="node-circle" cx="110" cy="160" r="58"></circle>
+              <text class="node-sub" x="110" y="148" text-anchor="middle">Current role</text>
+              <text class="node-label" x="110" y="168" text-anchor="middle">Infra Support</text>
+              <text class="node-label" x="110" y="184" text-anchor="middle">Engineer</text>
+            </g>
+
+            <!-- DevOps node -->
+            <g class="node-group" data-target="devops" data-difficulty="moderate" tabindex="0">
+              <circle class="node-circle" cx="530" cy="70" r="50"></circle>
+              <text class="node-label" x="530" y="66" text-anchor="middle">DevOps</text>
+              <text class="node-label" x="530" y="82" text-anchor="middle">Engineer</text>
+              <g class="badge-moderate">
+                <rect class="node-badge-bg" x="488" y="98" width="84" height="20" rx="10"></rect>
+                <text class="node-badge-text" x="530" y="112" text-anchor="middle">Moderate</text>
+              </g>
+            </g>
+
+            <!-- SysOps node -->
+            <g class="node-group" data-target="sysops" data-difficulty="moderate" tabindex="0">
+              <circle class="node-circle" cx="530" cy="160" r="50"></circle>
+              <text class="node-label" x="530" y="156" text-anchor="middle">SysOps</text>
+              <text class="node-label" x="530" y="172" text-anchor="middle">Engineer</text>
+              <g class="badge-moderate">
+                <rect class="node-badge-bg" x="488" y="188" width="84" height="20" rx="10"></rect>
+                <text class="node-badge-text" x="530" y="202" text-anchor="middle">Moderate</text>
+              </g>
+            </g>
+
+            <!-- Security node -->
+            <g class="node-group" data-target="security" data-difficulty="challenging" tabindex="0">
+              <circle class="node-circle" cx="530" cy="250" r="50"></circle>
+              <text class="node-label" x="530" y="246" text-anchor="middle">Security</text>
+              <text class="node-label" x="530" y="262" text-anchor="middle">Engineer</text>
+              <g class="badge-challenging">
+                <rect class="node-badge-bg" x="480" y="278" width="100" height="20" rx="10"></rect>
+                <text class="node-badge-text" x="530" y="292" text-anchor="middle">Challenging</text>
+              </g>
+            </g>
+          </svg>
+        </div>
+        <div class="legend">
+          <span><i class="dot current"></i> Current role</span>
+          <span><i class="dot moderate"></i> Moderate transition</span>
+          <span><i class="dot challenging"></i> Challenging transition</span>
+          <span>Tap a role to see the full picture ↓</span>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="panel">
+          <h3>Why this role is changing</h3>
+          <ul class="clean">
+            <li>AI will predict server load and automatically locate back-up servers.</li>
+            <li>Companies are shifting away from on-premise infrastructure toward cloud providers.</li>
+            <li>AI will automate real-time root cause analysis, so engineers focus on the harder issues.</li>
+            <li>Monitoring and issue resolution are merging with DevOps practices, like Infrastructure-as-Code.</li>
+          </ul>
+        </div>
+        <div class="panel">
+          <h3>Key trends driving this</h3>
+          <div class="trend-chips">
+            <div class="trend-chip">🤖 AI &amp; Analytics</div>
+            <div class="trend-chip">☁️ Cloud Computing</div>
+            <div class="trend-chip">🔀 Evolving IT Ecosystem</div>
+          </div>
+          <p style="color:var(--text-dim); font-size:13.5px; margin-top:14px;">These three forces show up across all three role profiles below — each one leans more heavily on cloud, automation and security skills than the Infrastructure Support role does today.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DEVOPS -->
+  <section class="role-section" id="devops">
+    <div class="wrap">
+      <div class="role-head">
+        <div>
+          <div class="role-eyebrow">Possible next role · Software &amp; Applications track</div>
+          <h2 class="role-title">DevOps Engineer</h2>
+        </div>
+        <div class="difficulty-pill moderate"><span class="gauge"></span> Moderate transition</div>
+      </div>
+
+      <div class="role-desc">
+        <p>Owns the build, release, deployment and configuration of applications as part of the agile team. Builds and runs the CI/CD pipeline, builds proof-of-concepts, and keeps pushing out tested, working releases.</p>
+        <p>Works closely with the business to gather requirements, builds and runs test plans, and fixes issues as they come up — usually in a fast-changing environment where priorities shift often. Comfortable with the org's programming languages, CI/CD tools, testing tools and configuration management tools.</p>
+      </div>
+
+      <div class="subhead">Critical work functions &amp; key tasks</div>
+      <div class="cwf-list" data-role="devops"></div>
+
+      <div class="subhead">Technical skills required</div>
+      <p class="skills-note">Green = you likely already have this from your current role. Amber = a gap worth closing. "Lvl" is the SkillsFramework proficiency level required (1 = basic, up to 6 = expert).</p>
+      <div class="tag-cloud" data-skills="devops"></div>
+
+      <div class="subhead">Critical core skills (top 5)</div>
+      <div class="ccs-grid" data-ccs="devops"></div>
+
+      <div class="subhead">Why this move makes sense</div>
+      <div class="mobility-box">
+        <p>Your experience running and maintaining infrastructure and systems carries over well — it's a solid base for contributing to designing and building applications.</p>
+        <div class="match-gap-grid">
+          <div>
+            <div class="mg-label match-l">✓ Top skills match</div>
+            <div class="tag-cloud" data-match="devops"></div>
+          </div>
+          <div>
+            <div class="mg-label gap-l">△ Top skills gap</div>
+            <div class="tag-cloud" data-gap="devops"></div>
+          </div>
+        </div>
+      </div>
+
+      <a class="back-link" href="#top">↑ Back to pathway map</a>
+    </div>
+  </section>
+
+  <!-- SYSOPS -->
+  <section class="role-section" id="sysops">
+    <div class="wrap">
+      <div class="role-head">
+        <div>
+          <div class="role-eyebrow">Possible next role · Infrastructure track</div>
+          <h2 class="role-title">SysOps Engineer</h2>
+        </div>
+        <div class="difficulty-pill moderate"><span class="gauge"></span> Moderate transition</div>
+      </div>
+
+      <div class="role-desc">
+        <p>Owns the reliability and efficiency of systems — optimising capacity and performance, using scripting to automate away recurring issues, and enabling infrastructure that scales. Also handles installs, upgrades, continuous monitoring, and keeping cloud platforms secure and compliant.</p>
+        <p>Strong in scripting and programming, comfortable with cloud platforms and scaling infrastructure. Works on-call and in shifts, prioritising well under pressure, and enjoys hands-on problem-solving with minimal supervision.</p>
+      </div>
+
+      <div class="subhead">Critical work functions &amp; key tasks</div>
+      <div class="cwf-list" data-role="sysops"></div>
+
+      <div class="subhead">Technical skills required</div>
+      <p class="skills-note">Green = you likely already have this from your current role. Amber = a gap worth closing. "Lvl" is the SkillsFramework proficiency level required (1 = basic, up to 6 = expert).</p>
+      <div class="tag-cloud" data-skills="sysops"></div>
+
+      <div class="subhead">Critical core skills (top 5)</div>
+      <div class="ccs-grid" data-ccs="sysops"></div>
+
+      <div class="subhead">Why this move makes sense</div>
+      <div class="mobility-box">
+        <p>Your day-to-day work already touches infrastructure operation, maintenance and optimisation, so you could likely pick up performance-optimisation tasks quickly here.</p>
+        <div class="match-gap-grid">
+          <div>
+            <div class="mg-label match-l">✓ Top skills match</div>
+            <div class="tag-cloud" data-match="sysops"></div>
+          </div>
+          <div>
+            <div class="mg-label gap-l">△ Top skills gap</div>
+            <div class="tag-cloud" data-gap="sysops"></div>
+          </div>
+        </div>
+      </div>
+
+      <a class="back-link" href="#top">↑ Back to pathway map</a>
+    </div>
+  </section>
+
+  <!-- SECURITY -->
+  <section class="role-section" id="security">
+    <div class="wrap">
+      <div class="role-head">
+        <div>
+          <div class="role-eyebrow">Possible next role · Cyber Security track</div>
+          <h2 class="role-title">Senior Security Engineer / Security Engineer</h2>
+        </div>
+        <div class="difficulty-pill challenging"><span class="gauge"></span> Challenging transition</div>
+      </div>
+
+      <div class="role-desc">
+        <p>Designs, develops and implements secure system architectures — embedding security principles into system design to reduce risk from new technologies and business practices. Documents security standards and procedures, and reviews and audits infrastructure security systems.</p>
+        <p>Well-versed in cyber security standards, protocols and frameworks, and works in line with Singapore's Cyber Security Act 2018. Structured and systematic, articulate, and works well across teams and stakeholders.</p>
+      </div>
+
+      <div class="subhead">Critical work functions &amp; key tasks</div>
+      <div class="cwf-list" data-role="security"></div>
+
+      <div class="subhead">Technical skills required</div>
+      <p class="skills-note">Green = you likely already have this from your current role. Amber = a gap worth closing. "Lvl" is the SkillsFramework proficiency level required (1 = basic, up to 6 = expert).</p>
+      <div class="tag-cloud" data-skills="security"></div>
+
+      <div class="subhead">Critical core skills (top 5)</div>
+      <div class="ccs-grid" data-ccs="security"></div>
+
+      <div class="subhead">Why this move makes sense</div>
+      <div class="mobility-box">
+        <p>Your knowledge of infrastructure systems and networks is genuinely useful here — those are the very components security engineers work to protect. That said, this is the biggest stretch of the three, since it leans heavily on the security domain itself.</p>
+        <div class="match-gap-grid">
+          <div>
+            <div class="mg-label match-l">✓ Top skills match</div>
+            <div class="tag-cloud" data-match="security"></div>
+          </div>
+          <div>
+            <div class="mg-label gap-l">△ Top skills gap</div>
+            <div class="tag-cloud" data-gap="security"></div>
+          </div>
+        </div>
+      </div>
+
+      <a class="back-link" href="#top">↑ Back to pathway map</a>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">Built from Singapore's Skills Framework for ICT (SkillsFuture SG / IMDA) — Infrastructure &amp; Operations and Support tracks.</div>
+  </footer>
+</main>
+
+<script>
+const DATA = {
+  devops: {
+    cwf: [
+      { title:"Assess user needs and requirements", tasks:[
+        "Determine software application and feature enhancement requirements based on business needs and user feedback",
+        "Gather, analyse and document client needs and business requirements",
+        "Draft technical and functional specifications",
+        "Formulate solutions, alternatives and design specifications that support business and technical objectives",
+        "Analyse client operations to uncover opportunities for improvement"
+      ]},
+      { title:"Develop applications and tools for development teams", tasks:[
+        "Translate business and technical requirements into test cases, scenarios and scripts",
+        "Build IT solutions to meet business requirements and develop reusable components",
+        "Install and configure software solutions",
+        "Integrate solutions with other applications and platforms",
+        "Develop program code and logic for new or existing software",
+        "Maintain and update scripts as requirements change",
+        "Build automation frameworks for deployment, management and monitoring",
+        "Review software modules for quality assurance",
+        "Set up and maintain test environments for manual and automated testing"
+      ]},
+      { title:"Perform continuous integration of application features", tasks:[
+        "Determine specifications and features for the next development iteration",
+        "Build automated deployments using configuration management technology",
+        "Automate security and risk management processes for continuous integration",
+        "Deploy security algorithms, protocols and self-healing features to reduce breaches",
+        "Develop requirements, methods and procedures for routine maintenance",
+        "Perform security vulnerability and automated testing",
+        "Troubleshoot existing systems to identify and fix errors"
+      ]},
+      { title:"Perform continuous deployment of enhanced applications", tasks:[
+        "Build automated deployment using configuration management technology",
+        "Deploy new modules, upgrades and fixes to production",
+        "Continuously monitor applications and their features",
+        "Run automated and/or load tests to address issues",
+        "Evaluate applications and propose improvements via gap analysis",
+        "Document and hand over knowledge to production support"
+      ]}
+    ],
+    skills: [["Agile Coaching","4"],["Agile Software Development","3"],["Applications Development","4"],["Applications Integration","4"],["Applications Support and Enhancement","3,4"],["Business Agility","4"],["Business Environment Analysis","3"],["Business Needs Analysis","4"],["Business Requirements Mapping","3"],["Business Risk Management","3"],["Change Management","4"],["Configuration Tracking","3"],["Continuous Integration and Continuous Deployment","3"],["Data Design","4"],["Database Administration","4"],["Emerging Technology Synthesis","4"],["Network Configuration","3"],["Performance Management","4"],["Problem Management","3"],["Project Management","4"],["Quality Standards","4"],["Security Administration","3"],["Software Configuration","4"],["Software Design","4"],["Software Testing","4"],["Stakeholder Management","4"],["Systems Design","3"],["System Integration","4"],["Test Planning","4"],["User Interface Design","4"]],
+    ccs: [["Computational Thinking","Advanced"],["Problem Solving","Advanced"],["Lifelong Learning","Intermediate"],["Communication","Basic"],["Teamwork","Intermediate"]],
+    match: ["Business Needs Analysis","Network Configuration","Project Management","Security Administration","System Integration"],
+    gap: ["Agile Software Development","Automation Management","Cloud Computing","Software Testing","Systems Design","Continuous Integration and Continuous Deployment"]
+  },
+  sysops: {
+    cwf: [
+      { title:"Develop infrastructure architecture and standards", tasks:[
+        "Develop processes and standards for reliability — availability, performance, capacity, change management, security and monitoring",
+        "Translate business needs into cloud architectural requirements",
+        "Design scalable, robust systems using cloud architecture",
+        "Create procedures and documentation for site reliability and incident management"
+      ]},
+      { title:"Configure and deploy infrastructure", tasks:[
+        "Build and run large-scale, distributed, fault-tolerant systems",
+        "Provision cloud resources",
+        "Configure infrastructure for development and prototyping",
+        "Conduct pre-deployment testing for reliability",
+        "Implement operational cost controls for cloud infrastructure",
+        "Identify and resolve deployment issues"
+      ]},
+      { title:"Monitor infrastructure and resolve issues", tasks:[
+        "Oversee configuration of operational systems against technical and security requirements",
+        "Monitor performance, system health, availability and latency",
+        "Provide proactive updates or alerts to stakeholders",
+        "Address performance or availability gaps",
+        "Run testing and release procedures",
+        "Resolve issues and prevent recurrence using automation",
+        "Perform regular tuning of infrastructure and services"
+      ]},
+      { title:"Automate infrastructure operations and optimise performance", tasks:[
+        "Conduct capacity planning and performance analysis",
+        "Identify opportunities to automate operational workflows",
+        "Develop tools and scripts to automate deployments",
+        "Create an environment for monitoring, alerting, self-healing and automated recovery"
+      ]},
+      { title:"Embed scalability into infrastructure", tasks:[
+        "Devise strategies and roadmaps for scaling operations",
+        "Design and write code for scalable systems",
+        "Scale systems through automation for recurring tasks",
+        "Propose enhancements to infrastructure architecture"
+      ]},
+      { title:"Manage data, security and compliance", tasks:[
+        "Configure cloud platforms in line with security policies",
+        "Implement identity and access management controls",
+        "Execute procedures for data protection and encryption",
+        "Monitor compliance of data management and retention"
+      ]}
+    ],
+    skills: [["Agile Coaching","4"],["Application Development","4"],["Applications Integration","4"],["Budgeting","3"],["Business Agility","4"],["Business Environment Analysis","3"],["Business Innovation","4"],["Business Needs Analysis","3"],["Business Requirements Mapping","3"],["Business Risk Management","3"],["Change Management","3"],["Cloud Computing","4"],["Configuration Tracking","3"],["Continuous Integration and Continuous Deployment","3"],["Contract Management","3"],["Cyber and Data Breach Incident Management","4"],["Emerging Technology Synthesis","4"],["Infrastructure Deployment","4"],["Infrastructure Design","4"],["Infrastructure Support","4"],["Network Administration and Maintenance","3"],["Network Configuration","3"],["Network Security","4"]],
+    ccs: [["Problem Solving","Advanced"],["Service Orientation","Intermediate"],["Resource Management","Intermediate"],["Teamwork","Basic"],["Sense Making","Intermediate"]],
+    match: ["Cyber and Data Breach Incident Management","Infrastructure Support","Network Administration and Maintenance","Process Improvement and Optimisation","Procurement"],
+    gap: ["Applications Development","Cloud Computing","Continuous Integration and Continuous Deployment","Solution Architecture","Software Configuration","Virtual Collaboration"]
+  },
+  security: {
+    cwf: [
+      { title:"Develop architecture requirements and maintain oversight", tasks:[
+        "Design security controls and systems in line with security guidelines",
+        "Assist in testing and evaluating new security technologies and controls",
+        "Recommend security products, services and procedures",
+        "Document the design, operation, use and expected outputs of new systems",
+        "Research modern security software and network architecture best practices"
+      ], perf:"In accordance with the Cyber Security Act 2018, Cyber Security Agency of Singapore"},
+      { title:"Implement security systems", tasks:[
+        "Implement new enterprise security architecture, technologies and enhancements",
+        "Identify techniques to scale up and automate security infrastructure",
+        "Resolve issues arising from implementing new security systems",
+        "Monitor security systems for weaknesses and propose improvements"
+      ], perf:"As above"},
+      { title:"Manage security systems", tasks:[
+        "Oversee maintenance of security systems, platforms and software",
+        "Develop and run custom disaster recovery drills and simulation tests",
+        "Assist in resolving identified problems and incidents"
+      ], perf:"As above"}
+    ],
+    skills: [["Business Needs Analysis","3"],["Cyber and Data Breach Incident Management","3"],["Cyber Risk Management","4"],["Emerging Technology Synthesis","3"],["Infrastructure Design","3"],["Network Security","4"],["Security Administration","3"],["Security Architecture","3"],["Security Governance","4"],["Security Programme Management","3"],["Strategy Implementation","4"],["Strategy Planning","4"]],
+    ccs: [["Communication","Intermediate"],["Computational Thinking","Intermediate"],["Problem Solving","Intermediate"],["Sense Making","Intermediate"],["Teamwork","Intermediate"]],
+    match: ["Business Needs Analysis","Cyber and Data Breach Incident Management"],
+    gap: ["Business Risk Management","Cyber Risk Management","Infrastructure Design","Network Security","Security Administration","Security Architecture","Security Governance","Security Programme Management"]
+  }
+};
+
+function buildCWF(role){
+  const container = document.querySelector('.cwf-list[data-role="'+role+'"]');
+  const items = DATA[role].cwf;
+  container.innerHTML = items.map((item, i) => `
+    <div class="cwf-item" data-idx="${i}">
+      <button class="cwf-toggle" aria-expanded="false">
+        <span>${item.title}</span>
+        <span class="chev">+</span>
+      </button>
+      <div class="cwf-body">
+        <ul>${item.tasks.map(t => `<li>${t}</li>`).join('')}</ul>
+        ${item.perf ? `<div class="perf-note">Performance expectations: ${item.perf}</div>` : ''}
+      </div>
+    </div>
+  `).join('');
+
+  container.querySelectorAll('.cwf-toggle').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const parent = btn.closest('.cwf-item');
+      const body = parent.querySelector('.cwf-body');
+      const isOpen = parent.classList.toggle('open');
+      btn.setAttribute('aria-expanded', isOpen);
+      body.style.maxHeight = isOpen ? body.scrollHeight + 20 + 'px' : '0px';
+    });
+  });
+}
+
+function buildSkills(role){
+  const el = document.querySelector('.tag-cloud[data-skills="'+role+'"]');
+  const match = new Set(DATA[role].match);
+  const gap = new Set(DATA[role].gap);
+  el.innerHTML = DATA[role].skills.map(([name, level]) => {
+    let cls = '';
+    if(match.has(name)) cls = 'match';
+    else if(gap.has(name)) cls = 'gap';
+    return `<span class="tag ${cls}">${name}<span class="lvl-badge">Lvl ${level}</span></span>`;
+  }).join('');
+}
+
+function buildCCS(role){
+  const el = document.querySelector('.ccs-grid[data-ccs="'+role+'"]');
+  el.innerHTML = DATA[role].ccs.map(([name, lvl]) => `
+    <div class="ccs-card"><div class="lvl">${lvl}</div><div class="name">${name}</div></div>
+  `).join('');
+}
+
+function buildMatchGap(role){
+  document.querySelector('.tag-cloud[data-match="'+role+'"]').innerHTML =
+    DATA[role].match.map(s => `<span class="tag match">${s}</span>`).join('');
+  document.querySelector('.tag-cloud[data-gap="'+role+'"]').innerHTML =
+    DATA[role].gap.map(s => `<span class="tag gap">${s}</span>`).join('');
+}
+
+['devops','sysops','security'].forEach(role => {
+  buildCWF(role);
+  buildSkills(role);
+  buildCCS(role);
+  buildMatchGap(role);
+});
+
+// node click -> highlight path + scroll
+document.querySelectorAll('.node-group[data-target]').forEach(node => {
+  const activate = () => {
+    document.querySelectorAll('.node-group[data-target]').forEach(n => n.classList.remove('active'));
+    node.classList.add('active');
+    document.querySelectorAll('.path-line').forEach(l => l.style.stroke = 'var(--border)');
+    const target = node.getAttribute('data-target');
+    const line = document.getElementById('line-' + target);
+    if(line){
+      const diff = node.getAttribute('data-difficulty');
+      line.style.stroke = diff === 'challenging' ? 'var(--challenging)' : 'var(--moderate)';
+      line.style.strokeWidth = '3';
+    }
+    document.getElementById(target).scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+  node.addEventListener('click', activate);
+  node.addEventListener('keypress', e => { if(e.key === 'Enter' || e.key === ' ') activate(); });
+});
+</script>
+
+</body>
+</html>
