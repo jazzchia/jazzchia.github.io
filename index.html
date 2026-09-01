@@ -504,7 +504,7 @@
         </div>
       </div>
 
-      <a class="back-link" href="#top">↑ Back to pathway map</a>
+      <a class="back-link js-back-top" href="#top">↑ Back to pathway map</a>
     </div>
   </section>
 
@@ -549,7 +549,7 @@
         </div>
       </div>
 
-      <a class="back-link" href="#top">↑ Back to pathway map</a>
+      <a class="back-link js-back-top" href="#top">↑ Back to pathway map</a>
     </div>
   </section>
 
@@ -594,7 +594,7 @@
         </div>
       </div>
 
-      <a class="back-link" href="#top">↑ Back to pathway map</a>
+      <a class="back-link js-back-top" href="#top">↑ Back to pathway map</a>
     </div>
   </section>
 
@@ -812,6 +812,15 @@ document.querySelectorAll('.mobile-node[data-target]').forEach(node => {
   };
   node.addEventListener('click', activate);
   node.addEventListener('keypress', e => { if(e.key === 'Enter' || e.key === ' ') activate(); });
+});
+
+// "Back to pathway map" -> reliable scroll to top (sticky header can be
+// an unreliable anchor target in some browsers, so we scroll explicitly)
+document.querySelectorAll('.js-back-top').forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
 });
 </script>
 
