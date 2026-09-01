@@ -232,7 +232,8 @@
   }
 
   /* skills */
-  .skills-note{font-size:13px; color:var(--text-dim); margin-bottom:14px;}
+  .skills-note{font-size:15px; color:var(--text-dim); margin-bottom:14px;}
+  .skills-note .clr-green{color:var(--match); font-weight:600;}
   .tag-cloud{display:flex; flex-wrap:wrap; gap:8px;}
   .tag{
     font-family:'IBM Plex Mono', monospace; font-size:12px; padding:6px 11px; border-radius:7px;
@@ -384,7 +385,7 @@
     .cwf-body ul{font-size:14.5px; padding:14px 14px 16px 28px;}
     .perf-note{font-size:13px;}
 
-    .skills-note{font-size:14px;}
+    .skills-note{font-size:16px;}
     .tag{font-size:13.5px; padding:8px 13px;}
     .tag .lvl-badge{font-size:11.5px;}
 
@@ -561,7 +562,7 @@
       <div class="cwf-list" data-role="devops"></div>
 
       <div class="subhead">Technical skills required</div>
-      <p class="skills-note">Green = you likely already have this from your current role. Amber = a gap worth closing. "Lvl" is the SkillsFramework proficiency level required (1 = basic, up to 6 = expert).</p>
+      <p class="skills-note"><span class="clr-green">Green</span> = you likely already have this from your current role. Amber = a gap worth closing. "Lvl" is the SkillsFramework proficiency level required (1 = basic, up to 6 = expert).</p>
       <div class="tag-cloud" data-skills="devops"></div>
       <p class="select-hint">Click any tag or card to add it to your selection tray for copying.</p>
 
@@ -608,7 +609,7 @@
       <div class="cwf-list" data-role="sysops"></div>
 
       <div class="subhead">Technical skills required</div>
-      <p class="skills-note">Green = you likely already have this from your current role. Amber = a gap worth closing. "Lvl" is the SkillsFramework proficiency level required (1 = basic, up to 6 = expert).</p>
+      <p class="skills-note"><span class="clr-green">Green</span> = you likely already have this from your current role. Amber = a gap worth closing. "Lvl" is the SkillsFramework proficiency level required (1 = basic, up to 6 = expert).</p>
       <div class="tag-cloud" data-skills="sysops"></div>
       <p class="select-hint">Click any tag or card to add it to your selection tray for copying.</p>
 
@@ -655,7 +656,7 @@
       <div class="cwf-list" data-role="security"></div>
 
       <div class="subhead">Technical skills required</div>
-      <p class="skills-note">Green = you likely already have this from your current role. Amber = a gap worth closing. "Lvl" is the SkillsFramework proficiency level required (1 = basic, up to 6 = expert).</p>
+      <p class="skills-note"><span class="clr-green">Green</span> = you likely already have this from your current role. Amber = a gap worth closing. "Lvl" is the SkillsFramework proficiency level required (1 = basic, up to 6 = expert).</p>
       <div class="tag-cloud" data-skills="security"></div>
       <p class="select-hint">Click any tag or card to add it to your selection tray for copying.</p>
 
@@ -794,7 +795,7 @@ const DATA = {
     skills: [["Agile Coaching","4"],["Application Development","4"],["Applications Integration","4"],["Budgeting","3"],["Business Agility","4"],["Business Environment Analysis","3"],["Business Innovation","4"],["Business Needs Analysis","3"],["Business Requirements Mapping","3"],["Business Risk Management","3"],["Change Management","3"],["Cloud Computing","4"],["Configuration Tracking","3"],["Continuous Integration and Continuous Deployment","3"],["Contract Management","3"],["Cyber and Data Breach Incident Management","4"],["Emerging Technology Synthesis","4"],["Infrastructure Deployment","4"],["Infrastructure Design","4"],["Infrastructure Support","4"],["Network Administration and Maintenance","3"],["Network Configuration","3"],["Network Security","4"]],
     ccs: [["Problem Solving","Advanced"],["Service Orientation","Intermediate"],["Resource Management","Intermediate"],["Teamwork","Basic"],["Sense Making","Intermediate"]],
     match: ["Cyber and Data Breach Incident Management","Infrastructure Support","Network Administration and Maintenance","Process Improvement and Optimisation","Procurement"],
-    gap: ["Applications Development","Cloud Computing","Continuous Integration and Continuous Deployment","Solution Architecture","Software Configuration","Virtual Collaboration"]
+    gap: ["Application Development","Cloud Computing","Continuous Integration and Continuous Deployment","Solution Architecture","Software Configuration","Virtual Collaboration"]
   },
   security: {
     cwf: [
